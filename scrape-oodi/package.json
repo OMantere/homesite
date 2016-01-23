@@ -1,0 +1,16 @@
+{
+  "name": "scrape-oodi",
+  "version": "0.0.1",
+  "description": "Scrapes WebOodi for course info",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "preinstall": "apt-get install phantomjs"
+  },
+  "author": "Oskari Mantere",
+  "license": "ISC",
+  "dependencies": {
+    "phantom": "^0.8.4",
+    "phantomjs": "^1.9.19"
+  }
+}
