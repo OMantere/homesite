@@ -20,7 +20,7 @@ var scrape = function (user, pass, tries) {
     tries++;
     return new Promise(function(resolve, reject) {
         scraper.scrape(user, pass).then(function (result) {
-            if(result.indexOf('No data found, error data:') == 0 && tries > maxTries)
+            if(result.indexOf('No data found, error data:') == 0 && tries < maxTries)
                 scrape(user, pass, tries);
             else
                 resolve(result);

@@ -5,26 +5,24 @@
 // Developer Console, https://console.developers.google.com
 var CLIENT_ID = '1006558970051-h7ufs8mmtqgt5eu4pcklfjivsfh2lor7.apps.googleusercontent.com';
 
-var SCOPES = ["https://www.googleapis.com/auth/calendar.readonly"];
+var SCOPES = ["https://www.googleapis.com/auth/calendar"];
 
-var gData = {googleAuthed: false, calendarApiLoaded: false, calendarApiLoadedPromises: []};
+var gData = {googleAuthed: false, calendarApiLoaded: false, calendarApiLoadedCallbacks: []};
 
 function onCalendarApiLoaded() {
     gData.calendarApiLoaded = true;
-    gData.calendarApiLoadedPromises.forEach(function (promise) {
-        promise.resolve(true);
-    })
+    if(gData.calendarApiLoadedCallbacks.length > 0) {
+        gData.calendarApiLoadedCallbacks.forEach(function (func) {
+            func();
+        })
+    }
 }
 
-function checkCalendarApiLoaded() {
-    var promise = new Promise(function (resolve, reject) {
-        if(gData.calendarApiLoaded)
-            resolve(true);
-        else {
-            gData.calendarApiLoadedPromises.push(promise);
-        }
-    });
-    return promise;
+function checkCalendarApiLoaded(func) {
+    if(gData.calendarApiLoaded)
+        func();
+    else
+        gData.calendarApiLoadedCallbacks.push(func);
 }
 
 /**
@@ -50,6 +48,7 @@ function handleAuthResult(authResult) {
         gData.googleAuthed = true;
         // Hide auth UI, then load client library.
         authorizeDiv.style.display = 'none';
+        $('#success-div').show();
         loadCalendarApi();
     } else {
         gData.googleAuthed = false;

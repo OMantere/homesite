@@ -4,6 +4,24 @@
 
 
 
+var checkLoginFailure = function (state, page) {
+    state.loginCheckInProgress = true;
+    page.includeJs('https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js', function () {
+        if(page.evaluate(function (state) {
+            return ($('p.form-element.form-error').text().indexOf('Login has failed') > -1);
+        })) {
+            console.log('Check login credentials');
+            phantom.exit(1);
+        } else {
+            state.loginCheckInProgress = false;
+        }
+    })
+}
+
+
+
+
+
 var updateState = function (state) {
     state.step++;
     state.stepDone = false;
@@ -20,6 +38,7 @@ var doSteps = function (steps, page, state, description, callback) {
     state.step = -1;
     state.loadInProgress = false;
     state.stepDone = true;
+    state.loginCheckInProgress = false
 
     console.log("New step sequence: " + description);
 
@@ -50,9 +69,14 @@ var doSteps = function (steps, page, state, description, callback) {
     var refreshIntervalId = setInterval(function () {
 
         // We don't want to proceed if the redirect hasn't occurred yet
-        if(state.waitForRedirect)
-            if(page.frameUrl == state.previousUrl)
+        if(state.waitForRedirect) {
+            if (page.frameUrl == state.previousUrl) {
+                if (!state.loadInProgress) {
+                    checkLoginFailure(state, page);
+                }
                 return;
+            }
+        }
 
         if(!state.loadInProgress && state.stepDone) {
             if (typeof steps[state.step + 1] != "function") {
@@ -83,41 +107,28 @@ var steps1 = [
             state.stepDone = true;
         })
     },
-    // Click login button
-    /*function (state) {
 
-     page.includeJs('https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js', function () {
-
-     //jQuery Loaded.
-     state.stepDone = true;
-     state.loadInProgress = true;
-     return page.evaluate(function () {
-     var loginButton = $('.aalto-login-student').first();
-     loginButton.click();
-     console.log(document.documentElement.innerHTML);
-     console.log("Clicked " + loginButton.innerHTML);
-     })
-     })
-     },*/
     // Login using given credentials
     function (state, page) {
         state.waitForRedirect = true;
         state.previousUrl = page.frameUrl;
         console.log(page.frameUrl);
-        page.includeJs('https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js', function () {
+        if (state.step == 1 && !state.loginCheckInProgress) {
+            page.includeJs('https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js', function () {
 
-            page.evaluate(function (state) {
-                if (state.step == 1) {
-                    var formElements = $('#login');
-                    formElements.find('#username').first().val(state.user);
-                    formElements.find('#password').first().val(state.pass);
-                    formElements.find('.form-button').first().click();
-                    console.log("Submitted login form");
-                }
-            }, state)
+                page.evaluate(function (state) {
+                    if (state.step == 1 && !state.loginCheckInProgress) {
+                        var formElements = $('#login');
+                        formElements.find('#username').first().val(state.user);
+                        formElements.find('#password').first().val(state.pass);
+                        formElements.find('.form-button').first().click();
+                        console.log("Submitted login form");
+                    }
+                }, state)
 
-            state.stepDone = true;
-        })
+                state.stepDone = true;
+            })
+        }
     },
     // Pick up session key and go to enrollments
     function (state, page) {
@@ -169,12 +180,13 @@ var scrapeSteps = [
     //Scrape data
     function (state, page) {
         page.open('https://oodi.aalto.fi' + state.courses[state.courseScrapeIndex].linkUrl, function (status) {
+            delete state.courses[state.courseScrapeIndex].linkUrl; // Not needed any longer, just cluttering up the data
             state.scrapeDone = false; // To prevent scrape executing multiple times, caused by strange behavior of injectJs and evaluate
-            console.log('opened pagee');
             page.includeJs('https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js', function () {
                 if(!state.scrapeDone) {
                     state.scrapeDone = true;
-                    page.evaluate(function (state) {
+
+                    state.courses = page.evaluate(function (state) {
                         if (state.step == 0) {
                             console.log('Scraping course ' + state.courses[state.courseScrapeIndex].name);
 
@@ -206,7 +218,7 @@ var scrapeSteps = [
 
 
                             // Data field of course object to store data into, type a numeric id
-                            var scrape = function (activityIndex) {
+                            var scrape = function (activityIndex, state) {
                                 console.log('Executing scrape on table ' + activityIndex);
                                 console.log(DOMtables.slice(activityIndex, activityIndex + 1).children().length + ' rows');
                                 DOMtables.slice(activityIndex, activityIndex + 1).children().each(function (rowIndex) {
@@ -228,7 +240,7 @@ var scrapeSteps = [
                                             var words = timeSpanCell.text().replace(/\s+/g, ' ').split(' ').slice(0, -1);
                                             console.log('Words: ' + words.length + '  ' + words.toString());
 
-                                            var timeSpan = {timeSpan: words.splice(0, 1), days: []};
+                                            var timeSpan = {timeSpan: words.splice(0, 1)[0], days: []};
                                             console.log('Added timespan ' + timeSpan.timeSpan);
                                             var day = {};
                                             words.forEach(function (word, index, arr) {
@@ -256,8 +268,10 @@ var scrapeSteps = [
                             // Loop through the tables and scrape them into activity' objects
                             DOMtables.each(function (index) {
                                 state.courses[state.courseScrapeIndex].activities.push({timeSpans:[]});
-                                scrape(index);
+                                scrape(index, state);
                             })
+
+                            return state.courses;
                         }
                     }, state)
                     state.stepDone = true;
@@ -270,14 +284,17 @@ var scrapeSteps = [
 
 
 
-var scrapeCourse = function (page, state, finished) {
+var scrapeCourses = function (page, state, returnDataKey) {
+
     doSteps(scrapeSteps, page, state, "Scraping course " + state.courses[state.courseScrapeIndex].name, function (state) {
         console.log('Finished scraping course ' + state.courses[state.courseScrapeIndex].name);
         state.courseScrapeIndex++;
-        if(state.courseScrapeIndex == state.courses.length)
-            finished(state);
-        else
-            scrapeCourse(page, state, finished);
+
+        if(state.courseScrapeIndex == state.courses.length) {
+            console.log(returnDataKey + JSON.stringify(state.courses));
+            phantom.exit(0);
+        } else
+            scrapeCourses(page, state, returnDataKey);
     });
 };
 
@@ -297,8 +314,5 @@ returnDataKey = args[3];
 // Execute the steps
 doSteps(steps1, page, state, "Login and navigation to enrollments", function (state) {
     state.courseScrapeIndex = 0;
-    scrapeCourse(page, state, function (state) {
-        console.log(returnDataKey + JSON.stringify(state.courses));
-        phantom.exit(0);
-    })
+    scrapeCourses(page, state, returnDataKey);
 });
