@@ -4,6 +4,14 @@
 
 
 
+var updateState = function (state) {
+    state.step++;
+    state.stepDone = false;
+    state.waitForRedirect = false;
+    state.previousUrl = "";
+    console.log("step " + (state.step + 1));
+};
+
 // Main powerhouse, execution function to go through the steps
 
 var doSteps = function (steps, page, state, description, callback) {
@@ -41,6 +49,11 @@ var doSteps = function (steps, page, state, description, callback) {
     // Do the steps!
     var refreshIntervalId = setInterval(function () {
 
+        // We don't want to proceed if the redirect hasn't occurred yet
+        if(state.waitForRedirect)
+            if(page.frameUrl == state.previousUrl)
+                return;
+
         if(!state.loadInProgress && state.stepDone) {
             if (typeof steps[state.step + 1] != "function") {
                 console.log("Step sequence '" + description + "' complete!");
@@ -48,9 +61,7 @@ var doSteps = function (steps, page, state, description, callback) {
                 callback(state);
             }
             else if(typeof steps[state.step + 1] == "function") {
-                state.step++;
-                console.log("step " + (state.step + 1));
-                state.stepDone = false;
+                updateState(state);
                 steps[state.step](state, page);
             }
         }
@@ -75,21 +86,23 @@ var steps1 = [
     // Click login button
     /*function (state) {
 
-        page.includeJs('https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js', function () {
+     page.includeJs('https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js', function () {
 
-            //jQuery Loaded.
-            state.stepDone = true;
-            state.loadInProgress = true;
-            return page.evaluate(function () {
-                var loginButton = $('.aalto-login-student').first();
-                loginButton.click();
-                console.log(document.documentElement.innerHTML);
-                console.log("Clicked " + loginButton.innerHTML);
-            })
-        })
-    },*/
+     //jQuery Loaded.
+     state.stepDone = true;
+     state.loadInProgress = true;
+     return page.evaluate(function () {
+     var loginButton = $('.aalto-login-student').first();
+     loginButton.click();
+     console.log(document.documentElement.innerHTML);
+     console.log("Clicked " + loginButton.innerHTML);
+     })
+     })
+     },*/
     // Login using given credentials
     function (state, page) {
+        state.waitForRedirect = true;
+        state.previousUrl = page.frameUrl;
         console.log(page.frameUrl);
         page.includeJs('https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js', function () {
 
