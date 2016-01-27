@@ -1,0 +1,31 @@
+.oodi-link {
+    display: none !important;
+}
+
+.oodi-desktop-btn {
+    position: absolute;
+    color: hsla(0, 0%, 100%, 0.8);
+    border: 1px solid hsla(0, 0%, 100%, 0.8);
+    line-height: 3.4em;
+}
+
+@media (min-width: 1000px) {
+    .oodi-desktop-btn {
+        top: 10px;
+        left: 10px;
+    }
+}
+
+@media (max-width: 1000px) {
+    .oodi-desktop-btn {
+        top: 70px;
+        right: 20px;
+    }
+}
+
+@media (max-width: 840px) {
+    .oodi-desktop-btn {
+        display: none;
+    }
+}
+

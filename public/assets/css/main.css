@@ -2026,7 +2026,7 @@ input[type="reset"],
   background-size: auto, cover;
   color: #fff;
   cursor: default;
-  padding: 12em 0;
+  padding-top: 23vh;
   text-align: center;
   height: 100vh; }
   #banner .inner {
