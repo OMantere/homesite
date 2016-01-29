@@ -1,0 +1,96 @@
+//
+   Created by oskari on 26.1.2016.
+
+doctype html
+html
+    head
+        title= title
+        meta(charset="utf-8")
+        meta(http-equiv="X-UA-Compatible", content="IE=edge")
+        meta(name="viewport", content="width=device-width, initial-scale=1")
+
+        script(src='https://code.jquery.com/jquery-2.2.0.min.js')
+        script(src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js')
+
+        link(href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css', rel='stylesheet')
+
+        script(src='/assets/js/oodi-app/google-auth.js')
+        script(src="https://apis.google.com/js/client.js?onload=checkAuth")
+        script(src='/assets/js/oodi-app/oodi.js')
+
+        link(href='/assets/css/oodi/normalize.css', rel='stylesheet', type='text/css')
+        link(href='/assets/css/oodi/skeleton.css', rel='stylesheet', type='text/css')
+        link(href='/assets/css/font-awesome.min.css', rel='stylesheet', type='text/css')
+    body
+        .margintop
+            .container
+                .row
+
+                    div#oodiheader
+                        span Aalto WebOodi Calendar Tool
+
+                    .col-xs-12.feature-cont
+                        section.what.col-xs-12
+                            .col-lg-2.col-xs-12
+                                .fa.fa-question.fa-3x
+                            .col-lg-10.col-xs-12.feature-text-cont
+                                span This is a small tool for automatically importing all of your courses along with their location info from WebOodi into your Google Calendar, all in just a few clicks!
+                        section.secure.col-xs-12
+                            .col-lg-2.col-xs-12
+                                .fa.fa-lock.fa-3x
+                            .col-lg-10.col-xs-12.feature-text-cont
+                                span The connection between you and the server and between the server and WebOodi is secured with SSL/TLS, and your credentials themselves will not be stored anywhere along the way.
+
+
+
+                    .col-xs-12.google-auth-cont
+                        div
+                            h2 Step 1
+                        .col-xs-12
+                            span Authorize the tool to add events to your Google Calendar
+                        .col-xs-12
+                            // Button for the user to click to initiate auth sequence
+                            .col-xs-12#authorize-div(style='margin-top: 10px; display: none')
+                                button#authorize-button(type="button", onclick="handleAuthClick(event)") Authorize
+                        .success-div-cont
+                            .col-xs-12#success-div(style='display: none')
+                                .fa.fa-check.fa-2x
+                                span Done!
+
+
+                    .col-xs-12.aalto-login-cont
+                        div
+                            h2 Step 2
+                        .col-xs-12
+                            span Log in with your Aalto credentials
+
+                        form#aalto-login.form-group
+                            .col-xs-12.margintop
+                                .col-xs-12
+                                    input(placeholder='Username...', type="text", name="username")
+                                .col-xs-12
+                                    input(placeholder='Password...', type="password", name="password")
+                                .col-xs-12#getcourses-button
+                                    button(type='button', onclick='handleAaltoLogin(event)') Get my courses!
+
+                            .col-xs-12.loaders.margintop
+                                .col-xs-12.margintop#getcourses-loader(style='display:none')
+                                    img(src='/images/ajax-loader2.gif')
+
+                                .col-xs-12.margintop#loading-weboodi(style='display:none')
+                                    span Reading from WebOodi...
+                                .col-xs-12#loading-calendar(style='display:none')
+                                    span Done!
+                                    br
+                                    span Sending to Calendar...
+                                .col-xs-12#loading-alldone(style='display:none')
+                                    span Done!
+
+                            .col-xs-12.thankyou.margintop(style='display:none')
+                                .col-lg-2.col-xs-12(style='text-align: center')
+                                    .fa.fa-smile-o.fa-3x
+                                .col-lg-10.col-xs-12.feature-text-cont
+                                    span You're all done! Your lectures and exercise groups should now be in your personal Google calendar. Thank you for using this tool and have a nice day!
+
+
+        div(style='height:100px')

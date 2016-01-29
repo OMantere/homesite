@@ -1,0 +1,9 @@
+#!/bin/bash
+cd /root/app &&
+git fetch --all &&
+git reset --hard origin/master &&
+npm install &&
+cd scrape-oodi &&
+npm install &&
+cd ../ &&
+systemctl restart appserver.service 

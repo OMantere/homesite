@@ -1,0 +1,19 @@
+{
+  "name": "scrape-oodi",
+  "version": "0.0.1",
+  "description": "Scrapes WebOodi for course info",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Oskari Mantere",
+  "license": "ISC",
+  "dependencies": {
+    "crypto": "0.0.3",
+    "phantom": "^0.8.4",
+    "phantomjs": "^1.9.19"
+  },
+  "devDependencies": {
+    "crypto": "0.0.3"
+  }
+}
