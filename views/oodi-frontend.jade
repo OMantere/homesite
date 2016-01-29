@@ -24,27 +24,35 @@ html
     body
         .margintop
             .container
-                .row
 
+                .row
                     div#oodiheader
                         span Aalto WebOodi Calendar Tool
 
-                    .col-xs-12.feature-cont
-                        section.what.col-xs-12
-                            .col-lg-2.col-xs-12
-                                .fa.fa-question.fa-3x
-                            .col-lg-10.col-xs-12.feature-text-cont
-                                span This is a small tool for automatically importing all of your courses along with their location info from WebOodi into your Google Calendar, all in just a few clicks!
-                        section.secure.col-xs-12
-                            .col-lg-2.col-xs-12
-                                .fa.fa-lock.fa-3x
-                            .col-lg-10.col-xs-12.feature-text-cont
-                                span The connection between you and the server and between the server and WebOodi is secured with SSL/TLS, and your credentials themselves will not be stored anywhere along the way.
+
+                .row.feature-images-cont
+                    .col-xs-12.col-md-6.img-1
+                        img(src='/images/oodi-promo2.png')
+                    .col-xs-12.col-md-6.img-2
+                        img(src='/images/oodi-promo.png')
 
 
+                .row.feature-cont
+                    .what.row
+                        .col-lg-2.col-xs-12.feature-icon
+                            .fa.fa-question.fa-3x
+                        .col-lg-10.col-xs-12.feature-text-cont
+                            span This is a small tool for automatically importing all of your courses along with their location info from WebOodi into your Google Calendar, all in just a few clicks!
+                    .secure.row
+                        .col-lg-2.col-xs-12.feature-icon
+                            .fa.fa-lock.fa-3x
+                        .col-lg-10.col-xs-12.feature-text-cont
+                            span The connection between you and the server and between the server and WebOodi is secured with SSL/TLS, and your credentials themselves will not be stored anywhere along the way.
 
-                    .col-xs-12.google-auth-cont
-                        div
+
+                .row
+                    .row.google-auth-cont
+                        .col-xs-12
                             h2 Step 1
                         .col-xs-12
                             span Authorize the tool to add events to your Google Calendar
@@ -52,14 +60,14 @@ html
                             // Button for the user to click to initiate auth sequence
                             .col-xs-12#authorize-div(style='margin-top: 10px; display: none')
                                 button#authorize-button(type="button", onclick="handleAuthClick(event)") Authorize
-                        .success-div-cont
+                        .row.success-div-cont
                             .col-xs-12#success-div(style='display: none')
                                 .fa.fa-check.fa-2x
                                 span Done!
 
 
-                    .col-xs-12.aalto-login-cont
-                        div
+                    .row.aalto-login-cont
+                        .col-xs-12
                             h2 Step 2
                         .col-xs-12
                             span Log in with your Aalto credentials
@@ -87,10 +95,7 @@ html
                                     span Done!
 
                             .col-xs-12.thankyou.margintop(style='display:none')
-                                .col-lg-2.col-xs-12(style='text-align: center')
+                                .col-lg-2.col-xs-12.feature-icon(style='text-align: center')
                                     .fa.fa-smile-o.fa-3x
                                 .col-lg-10.col-xs-12.feature-text-cont
                                     span You're all done! Your lectures and exercise groups should now be in your personal Google calendar. Thank you for using this tool and have a nice day!
-
-
-        div(style='height:100px')

@@ -6,6 +6,6 @@ npm install &&
 cd scrape-oodi &&
 npm install &&
 cd ../ &&
-mkdir sessions &&
+mkdir -p sessions &&
 chown -R web /home/web &&
 systemctl restart appserver.service 

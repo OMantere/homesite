@@ -2,6 +2,6 @@
 cd /home/web/app &&
 git fetch --all &&
 git reset --hard origin/master &&
-mkdir sessions &&
+mkdir -p sessions &&
 chown -R web /home/web &&
 systemctl restart appserver.service 
