@@ -190,14 +190,14 @@ var scrapeSteps = [
                         if (state.step == 0) {
                             console.log('Scraping course ' + state.courses[state.courseScrapeIndex].name);
 
-                            // The tbody elements, 0 = exgroups 1 = lectures 2 = exams
+                            // The tbody elements, one table for each type of event eg. lecture, exgroup...
                             var DOMtables = $('table.kll').children('tbody');
                             console.log(DOMtables.length + ' tables to scan');
                             console.log('First table has ' + DOMtables.first().children().slice(1).length + ' groups rows');
                             console.log('First row has ' + DOMtables.first().children().slice(0, 1).children().length + ' cells, selecting 2nd one');
 
 
-                            // Add new day or add location to existing one
+                            // Add new day or add location to existing day
                             var addDay = function (newDay, array) {
                                 if (array.length == 0) {
                                     array.push(newDay);
@@ -217,7 +217,7 @@ var scrapeSteps = [
                             }
 
 
-                            // Data field of course object to store data into, type a numeric id
+                            // Data field of course object to store data into
                             var scrape = function (activityIndex, state) {
                                 console.log('Executing scrape on table ' + activityIndex);
                                 console.log(DOMtables.slice(activityIndex, activityIndex + 1).children().length + ' rows');
