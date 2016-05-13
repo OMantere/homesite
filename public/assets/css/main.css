@@ -2025,7 +2025,7 @@ input[type="reset"],
   background-size: auto, cover;
   color: #fff;
   cursor: default;
-  padding-top: 30vh;
+  padding-top: 23vh;
   text-align: center;
   height: 100vh; }
   #banner .inner {
@@ -2529,7 +2529,7 @@ input[type="reset"],
 
   /* Banner */
   #banner {
-    padding: 13em 0; }
+    padding: 6em 0; }
     #banner .inner {
       background: none;
       display: block;
