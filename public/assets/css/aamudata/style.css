@@ -1,0 +1,33 @@
+.search-bar {
+    margin-top: 20px;
+    height: 70px;
+}
+
+.search-bar input {
+    width: 80%;
+    margin-top: 20px;
+    display: inline-block;
+}
+
+.search-loader {
+    width: 20%;
+    display: inline-block;
+    text-align: center;
+}
+
+.search-loader img {
+    width: 50px;
+    height: auto;
+}
+
+.stop-search-error {
+    color: red;
+}
+
+.stop-item-icon {
+    text-align: right;
+}
+
+.stop-search-item:hover {
+    background-color: #b3e6ff;
+}

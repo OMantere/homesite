@@ -10,8 +10,62 @@ var environment = process.env.NODE_ENV;
 
 var oodi = require('./routes/oodi');
 var parse = require('./routes/parse');
+var aamudata_api = require('./routes/aamudata')
 
 var app = express();
+
+//Build aamu-data bundle
+const webpack = require('webpack');
+
+if(environment == 'production') {
+  webpack({
+    entry: './aamu-data/index.js',
+    output: {
+      filename: 'bundle.js',
+      path: 'public/build'
+    },
+    module: {
+      loaders: [
+        {
+          test: /\.js$/,
+          exclude: /(node_modules|bower_components)/,
+          loader: 'babel',
+          query: {
+            presets: ['es2015', 'react', 'stage-0'],
+            plugins: ['syntax-async-functions', 'transform-regenerator']
+          }
+        }
+      ]
+    }
+  }).run((err, stats) => {
+    console.log(err, stats)
+  });
+} else {
+  webpack({
+    entry: './aamu-data/index.js',
+    output: {
+      filename: 'bundle.js',
+      path: 'public/build'
+    },
+    module: {
+      loaders: [
+        {
+          test: /\.js$/,
+          exclude: /(node_modules|bower_components)/,
+          loader: 'babel',
+          query: {
+            presets: ['es2015', 'react']
+          }
+        }
+      ]
+    }
+  }).watch({
+    aggregateTimeout: 300,
+    poll: true
+  },(err, stats) => {
+    console.log(err, stats)
+  });
+}
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -35,6 +89,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/oodi', oodi);
 app.use('/parse', parse)
+app.use('/aamudata', aamudata_api)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
