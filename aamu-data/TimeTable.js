@@ -17,8 +17,8 @@ export default class TimeTable extends Component {
     getTimeLeft(timeStr) {
         const h = new Date().getHours();
         const m = new Date().getMinutes();
-        const busH = parseInt(timeStr.substr(0, 2));
-        const busM = parseInt(timeStr.substr(2, 2));
+        const busH = parseInt(timeStr.substr(0, timeStr.length == 4 ? 2 : 1));
+        const busM = parseInt(timeStr.substr(timeStr.length == 4 ? 2 : 1, 2));
         const mins = (busH - h)*60 + (busM - m);
         return mins > 59 ? `${Math.floor(mins/60)} h ${mins % 60} m` : `${mins % 60} m`;
     }
