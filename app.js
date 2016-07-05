@@ -88,8 +88,8 @@ app.use(session({
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/oodi', oodi);
-app.use('/parse', parse)
-app.use('/aamudata', aamudata_api)
+app.use('/parse', parse);
+app.use('/aamudata', aamudata_api);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
