@@ -1526,6 +1526,12 @@ footer.major {
   padding-left: 0; }
 #skills header.major {
   margin-bottom: 2em; }
+#skills .os-text {
+  text-align: left;
+  font-size: 1.2em;
+  padding: 0; }
+#skills .os-block {
+  margin-top: 4em; }
 
 /* Form */
 input[type="text"],
@@ -1716,10 +1722,12 @@ ul.icons {
     padding-left: 0.5em; }
     ul.icons li:first-child {
       padding-left: 0; }
+ul.prof-pic {
+  float: right;
+}
 ul.featured-icons {
   cursor: default;
   margin: -0.75em 0 0 0;
-  opacity: 0.75;
   overflow: hidden;
   position: relative; }
   ul.featured-icons li {
@@ -2449,7 +2457,7 @@ input[type="reset"],
     font-size: 1em; }
 
   /*Skills */
-  #skills .skills-block {
+  #skills .os-block, #skills .skills-block {
     padding-left: 2em; }
 
   /* Basic */

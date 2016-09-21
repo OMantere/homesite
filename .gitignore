@@ -11,3 +11,5 @@ gen
 /node_modules/*
 /node_modules/.bin/*
 /sessions/*
+logs
+public/build
