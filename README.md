@@ -7,7 +7,7 @@ Hi, this is the repo for my personal site. Feel free to browse around and re-use
 ## Aalto WebOodi Calendar Tool
 
 The course system at Aalto University had no way to export timetables to any external calendar, and the built-in system
-sucked. So i made this little tool that allows exporting of everything to Google Calendar. The Calendar tool can be found in the folder ```scrape-oodi```. 
+sucked. So i made this little tool that allows exporting of everything to Google Calendar. The scraping "app" which does the actual fetching of course data can be found in the folder ```scrape-oodi```. 
 
 
 #####Locations
